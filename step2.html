@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strategic Briefing - Early Access</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #09090b; /* Zinc 950 */
+        }
+        .form-input:focus {
+            ring: 2px;
+            ring-color: #818cf8; /* Indigo 400 */
+            outline: none;
+        }
+        @keyframes pulse-brighter {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.4; transform: scale(0.8); }
+        }
+        .animate-live {
+            animation: pulse-brighter 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        .beta-badge {
+            background-color: #1e1b4b; /* Indigo 950 */
+            border: 1px solid #4338ca; /* Indigo 700 */
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+
+    <!-- Success Message (Hidden by default) -->
+    <div id="success-box" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 p-4">
+        <div class="bg-zinc-900 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl border border-zinc-800">
+            <div class="w-16 h-16 bg-indigo-900/50 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-indigo-700">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+            </div>
+            <h2 class="text-2xl font-bold text-zinc-100 mb-2">Request Received!</h2>
+            <p class="text-zinc-400 mb-6">Thank you for participating in our beta program. We will reach out to you with your custom Strategic Brief as soon as our official version launches.</p>
+            <button onclick="closeSuccess()" class="w-full bg-indigo-600 text-white font-semibold py-3 rounded-lg hover:bg-indigo-700 transition">
+                Confirm
+            </button>
+        </div>
+    </div>
+
+    <!-- Main Container -->
+    <div class="max-w-2xl w-full bg-zinc-900 rounded-3xl shadow-2xl overflow-hidden border border-zinc-800">
+        
+        <!-- Header Section -->
+        <div class="p-8 pb-4 text-center">
+            <!-- Beta Badge -->
+            <div class="inline-flex items-center px-4 py-1.5 rounded-full text-xs font-bold text-indigo-300 beta-badge mb-6 uppercase tracking-wider">
+                <span class="relative flex h-2 w-2 mr-2.5">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-2 w-2 bg-indigo-400"></span>
+                </span>
+                Currently in Beta
+            </div>
+            <h1 class="text-3xl font-extrabold text-zinc-100 tracking-tight mb-3">
+                Customize Your Strategic Brief
+            </h1>
+            <p class="text-zinc-400 text-lg leading-relaxed max-w-lg mx-auto">
+                Tell us your target partners — we’ll deliver a <span class="text-indigo-400 font-semibold">tailored meeting strategy</span> for your success.
+            </p>
+        </div>
+
+        <!-- Form Section (Centered contents) -->
+        <form id="request-form" class="p-8 pt-4 space-y-8 flex flex-col items-center">
+            
+            <!-- Question: Partners (Reduced Width & Compact Style) -->
+            <div class="w-full max-w-md">
+                <label class="block text-xs font-bold text-zinc-500 mb-4 uppercase tracking-widest text-center">
+                    List up to 3 target partners
+                </label>
+                <div class="space-y-2">
+                    <div class="flex items-center space-x-3">
+                        <span class="text-[10px] font-bold text-zinc-700 w-4 text-right">01</span>
+                        <input type="text" id="partner1" required 
+                            class="flex-1 px-4 py-2.5 bg-zinc-800/50 border border-zinc-700 rounded-lg focus:ring-1 focus:ring-indigo-500 transition text-sm text-zinc-100 placeholder-zinc-600" 
+                            placeholder="e.g. Novartis">
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-[10px] font-bold text-zinc-700 w-4 text-right">02</span>
+                        <input type="text" id="partner2" 
+                            class="flex-1 px-4 py-2.5 bg-zinc-800/50 border border-zinc-700 rounded-lg focus:ring-1 focus:ring-indigo-500 transition text-sm text-zinc-100 placeholder-zinc-600" 
+                            placeholder="e.g. Eli Lilly">
+                    </div>
+                    <div class="flex items-center space-x-3">
+                        <span class="text-[10px] font-bold text-zinc-700 w-4 text-right">03</span>
+                        <input type="text" id="partner3" 
+                            class="flex-1 px-4 py-2.5 bg-zinc-800/50 border border-zinc-700 rounded-lg focus:ring-1 focus:ring-indigo-500 transition text-sm text-zinc-100 placeholder-zinc-600" 
+                            placeholder="e.g. Johnson & Johnson">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Value Reinforcement Box (Now max-w-md) -->
+            <div class="w-full max-w-md bg-indigo-950/20 rounded-2xl p-6 border border-indigo-900/40 relative overflow-hidden">
+                <!-- Highlighted Price Area -->
+                <div class="absolute top-0 right-0 p-4 text-right">
+                    <div class="text-[9px] text-zinc-600 line-through font-medium tracking-tighter decoration-red-900/40">$179.99</div>
+                    <div class="text-lg font-black text-indigo-400 leading-none uppercase">Free</div>
+                </div>
+
+                <h4 class="text-[11px] font-black text-indigo-300 mb-4 flex items-center uppercase tracking-widest opacity-80">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                    </svg>
+                    Exclusive Limited-Time Beta Benefits
+                </h4>
+                
+                <ul class="text-[12px] text-indigo-200/60 space-y-2.5 list-none font-normal">
+                    <li class="flex items-start">
+                        <span class="text-indigo-500 mr-2.5">✓</span>
+                        Deep-dive Brief on selected 3 target partners
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-indigo-400 mr-2.5">✓</span>
+                        Tactical Meeting Strategy & Outreach Roadmap
+                    </li>
+                    <li class="flex items-start">
+                        <span class="text-indigo-400 mr-2.5">✓</span>
+                        Priority Access to Early-bird Registration
+                    </li>
+                </ul>
+            </div>
+
+            <!-- CTA Button Section (Now max-w-md) -->
+            <div class="w-full max-w-md">
+                <button type="submit" 
+                    class="w-full bg-indigo-600 text-white text-sm font-bold py-4 rounded-xl hover:bg-indigo-500 transform active:scale-[0.99] transition-all shadow-lg hover:shadow-indigo-900/30 flex items-center justify-center space-x-2">
+                    <span>Get Early Access & Free Briefs</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
+                    </svg>
+                </button>
+                <p class="mt-4 text-center text-[10px] text-zinc-600 uppercase tracking-widest font-medium">
+                    Secure Processing & Strategy Generation Only
+                </p>
+            </div>
+        </form>
+    </div>
+
+    <!-- Footer -->
+    <footer class="mt-8 text-center text-zinc-700 text-[11px] uppercase tracking-widest">
+        &copy; 2026 Presigna. All rights reserved.
+    </footer>
+
+    <script>
+        const form = document.getElementById('request-form');
+        const successBox = document.getElementById('success-box');
+
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const data = {
+                partners: [
+                    document.getElementById('partner1').value,
+                    document.getElementById('partner2').value,
+                    document.getElementById('partner3').value
+                ]
+            };
+
+            console.log('Form Submitted:', data);
+
+            successBox.classList.remove('hidden');
+            form.reset();
+        });
+
+        function closeSuccess() {
+            successBox.classList.add('hidden');
+        }
+    </script>
+</body>
+</html>
