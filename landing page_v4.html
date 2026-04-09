@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presigna — Partnering Intelligence for Biotech</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg: #09090b;
+            --bg-card: #141417;
+            --border: #27272a;
+            --border-light: #3f3f46;
+            --text: #fafafa;
+            --text-secondary: #a1a1aa;
+            --text-tertiary: #71717a;
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --accent-bg: rgba(99, 102, 241, 0.1);
+            --accent-border: rgba(99, 102, 241, 0.3);
+            
+            /* Purple Gradient Shades */
+            --p-light: #a5b4fc;
+            --p-medium: #6366f1;
+            --p-deep: #4338ca;
+            
+            --green: #22c55e;
+            --green-light: #4ade80;
+            --green-bg: rgba(34, 197, 94, 0.1);
+            --amber: #f59e0b;
+            --amber-bg: rgba(245, 158, 11, 0.1);
+            --radius: 12px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { 
+            font-family: 'Inter', -apple-system, sans-serif; 
+            background: var(--bg); 
+            color: var(--text); 
+            line-height: 1.6; 
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Transition Logic */
+        #landing-view, #beta-view { transition: opacity 0.4s ease; }
+        .hidden { display: none !important; }
+
+        /* Nav */
+        nav { 
+            position: fixed; top: 0; width: 100%; z-index: 1000; 
+            backdrop-filter: blur(16px); background: rgba(9, 9, 11, 0.8); 
+            border-bottom: 1px solid var(--border); 
+        }
+        .nav-inner { 
+            max-width: 1200px; margin: 0 auto; padding: 16px 24px; 
+            display: flex; justify-content: space-between; align-items: center; 
+        }
+        .logo { font-size: 20px; font-weight: 700; letter-spacing: -0.03em; cursor: pointer; }
+        .logo span { color: var(--accent-light); }
+        .nav-cta { 
+            font-size: 13px; font-weight: 600; color: var(--text); 
+            text-decoration: none; padding: 8px 18px; 
+            border: 1px solid var(--accent-border); border-radius: 8px; 
+            transition: all 0.2s; cursor: pointer;
+        }
+        .nav-cta:hover { background: var(--accent-bg); border-color: var(--accent-light); }
+
+        /* Hero */
+        .hero { 
+            max-width: 1200px; margin: 0 auto; padding: 160px 24px 100px; 
+        }
+        .hero-container {
+            display: flex;
+            align-items: center;
+            gap: 60px;
+        }
+        .hero-text {
+            flex: 1.2;
+            text-align: left;
+        }
+        .hero-badge { 
+            display: inline-block; font-size: 11px; font-weight: 700; 
+            color: var(--accent-light); background: var(--accent-bg); 
+            border: 1px solid var(--accent-border); padding: 6px 16px; 
+            border-radius: 100px; margin-bottom: 24px; letter-spacing: 0.05em; 
+            text-transform: uppercase;
+        }
+        .hero h1 { 
+            font-size: clamp(32px, 5vw, 44px); font-weight: 800; 
+            letter-spacing: -0.04em; line-height: 1.15; margin-bottom: 24px; 
+            background: linear-gradient(to bottom, #ffffff 80%, #a1a1aa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .hero p { 
+            font-size: clamp(15px, 1.8vw, 17px); color: var(--text-secondary); 
+            max-width: 600px; margin-bottom: 40px; font-weight: 400;
+            line-height: 1.6;
+        }
+        .hero-cta { 
+            display: inline-block; font-size: 15px; font-weight: 700; 
+            color: #fff; background: var(--accent); padding: 16px 36px; 
+            border-radius: var(--radius); text-decoration: none; 
+            transition: all 0.2s; cursor: pointer;
+            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.2);
+            border: none;
+        }
+        .hero-cta:hover { background: var(--accent-light); transform: translateY(-2px); box-shadow: 0 12px 40px rgba(99, 102, 241, 0.4); }
+
+        .hero-visual {
+            flex: 1;
+            perspective: 1000px;
+        }
+
+        /* Preview Card */
+        .preview-frame { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border); 
+            border-radius: 16px; 
+            overflow: hidden; 
+            position: relative; 
+            box-shadow: 0 30px 60px rgba(0,0,0,0.5);
+            transform: rotateY(-5deg) rotateX(5deg);
+        }
+        .preview-topbar { background: #18181b; padding: 10px 16px; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--border); }
+        .preview-dot { width: 8px; height: 8px; border-radius: 50%; background: #27272a; }
+        .preview-title { font-size: 11px; color: var(--text-tertiary); margin-left: 8px; font-family: monospace; }
+        .preview-content { padding: 32px; position: relative; min-height: 260px; }
+        .preview-blur { filter: blur(4px); pointer-events: none; opacity: 0.2; }
+        .preview-overlay { 
+            position: absolute; top: 0; left: 0; right: 0; bottom: 0; 
+            display: flex; flex-direction: column; align-items: center; justify-content: center; 
+            background: rgba(9, 9, 11, 0.2); z-index: 10; text-align: center;
+        }
+        .preview-overlay-text { font-size: 18px; font-weight: 700; margin-bottom: 6px; }
+        .preview-overlay-sub { font-size: 13px; color: var(--text-secondary); margin-bottom: 20px; }
+        .preview-overlay-cta { 
+            font-size: 13px; font-weight: 600; color: var(--accent-light); 
+            text-decoration: none; padding: 8px 20px; border: 1px solid var(--accent-border); 
+            border-radius: 8px; transition: all 0.2s; 
+            background: rgba(9, 9, 11, 0.6);
+            backdrop-filter: blur(4px);
+            cursor: pointer;
+        }
+
+        /* Sections General */
+        .section { max-width: 1100px; margin: 0 auto; padding: 80px 24px; }
+        .section-label { 
+            font-size: 11px; font-weight: 700; color: var(--accent-light); 
+            text-transform: uppercase; letter-spacing: 0.15em; margin-bottom: 12px; text-align: center; 
+        }
+        .section h2 { font-size: clamp(28px, 4vw, 36px); font-weight: 700; letter-spacing: -0.03em; text-align: center; margin-bottom: 16px; line-height: 1.25; }
+        .section-subh { font-size: clamp(15px, 2vw, 17px); color: var(--text-secondary); text-align: center; max-width: 680px; margin: 0 auto 56px; line-height: 1.6; }
+
+        /* Problem/Value Card UI */
+        .problem-grid, .value-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .problem-card, .value-card { 
+            background: var(--bg-card); border: 1px solid var(--border); 
+            border-radius: var(--radius); padding: 32px; transition: 0.3s;
+        }
+        .problem-card .num { font-size: 36px; font-weight: 800; color: var(--accent); opacity: 0.3; margin-bottom: 8px; }
+        .value-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; padding: 4px 12px; border-radius: 6px; margin-bottom: 20px; display: inline-block; }
+        
+        .value-card:nth-child(1) .value-tag { color: var(--p-light); background: rgba(165, 180, 252, 0.1); }
+        .value-card:nth-child(2) .value-tag { color: #fff; background: var(--p-medium); }
+        .value-card:nth-child(3) .value-tag { color: #fff; background: var(--p-deep); }
+
+        .value-card ul { list-style: none; margin-top: 20px; }
+        .value-card li { font-size: 13px; color: var(--text-secondary); padding: 8px 0 8px 20px; position: relative; border-top: 1px solid rgba(255,255,255,0.03); }
+        .value-card li::before { content: '•'; position: absolute; left: 0; color: var(--accent-light); font-weight: 900; }
+
+        /* Final CTA Section (Box UI) - UPDATED TO GREEN & GLOW */
+        .beta-box { 
+            background: var(--bg-card); 
+            border: 2px solid var(--border); 
+            border-radius: 24px; 
+            padding: 64px 40px; 
+            text-align: center; 
+            position: relative; 
+            overflow: hidden; 
+            margin-top: 40px;
+            animation: glow-pulse 3s infinite ease-in-out;
+            transition: border-color 0.3s ease;
+        }
+
+        @keyframes glow-pulse {
+            0% { border-color: var(--border); box-shadow: 0 0 0px rgba(34, 197, 94, 0); }
+            50% { border-color: var(--green); box-shadow: 0 0 20px rgba(34, 197, 94, 0.3); }
+            100% { border-color: var(--border); box-shadow: 0 0 0px rgba(34, 197, 94, 0); }
+        }
+
+        .beta-box::before { 
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; 
+            background: linear-gradient(90deg, transparent, var(--green), transparent); 
+        }
+
+        .beta-spots { 
+            display: inline-block; font-size: 12px; font-weight: 700; 
+            color: #fff; background: var(--green); 
+            padding: 6px 16px; border-radius: 100px; margin-bottom: 24px; 
+            letter-spacing: 0.05em;
+            box-shadow: 0 0 15px rgba(34, 197, 94, 0.4);
+        }
+
+        .beta-desc { 
+            font-size: 16px; color: var(--text-secondary); 
+            margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; 
+        }
+
+        /* Form Styling in CTA - Green Themed Button */
+        .cta-form { max-width: 600px; margin: 0 auto; display: grid; gap: 16px; text-align: left; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+        .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
+        .form-input, .form-select { 
+            width: 100%; background: var(--bg); border: 1px solid var(--border); 
+            border-radius: 10px; padding: 13px; color: var(--text); font-size: 14px; 
+            transition: 0.2s;
+        }
+        .form-input:focus, .form-select:focus { outline: none; border-color: var(--green); box-shadow: 0 0 0 4px var(--green-bg); }
+        
+        .form-submit-full { 
+            width: 100%; padding: 16px; font-size: 15px; font-weight: 700; color: #fff; 
+            background: var(--green); border: none; border-radius: 12px; cursor: pointer; 
+            transition: 0.2s; margin-top: 8px;
+            box-shadow: 0 10px 30px rgba(34, 197, 94, 0.2);
+        }
+        .form-submit-full:hover { background: var(--green-light); transform: translateY(-1px); box-shadow: 0 12px 40px rgba(34, 197, 94, 0.4); }
+
+        .trust { 
+            display: flex; justify-content: center; gap: 40px; 
+            margin-top: 48px; padding-top: 32px; border-top: 1px solid var(--border); 
+            flex-wrap: wrap; 
+        }
+        .trust-item { font-size: 13px; color: var(--text-tertiary); display: flex; align-items: center; gap: 8px; }
+        .trust-icon { color: var(--green); font-size: 16px; }
+
+        /* Beta View Specific */
+        #beta-view { padding-top: 140px; min-height: 100vh; }
+        .beta-container { max-width: 800px; margin: 0 auto; text-align: center; }
+        .beta-header { margin-bottom: 60px; }
+        .beta-header h1 { font-size: 36px; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.03em; }
+        .beta-header p { color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0 auto; }
+        
+        .beta-input-section { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border); 
+            border-radius: 24px; 
+            padding: 48px; 
+            text-align: left;
+            position: relative;
+        }
+        .beta-input-section::before {
+            content: 'LIMITED BETA';
+            position: absolute; top: -12px; left: 40px;
+            background: var(--accent); color: white; font-size: 10px; font-weight: 800;
+            padding: 4px 12px; border-radius: 4px;
+        }
+
+        .input-group { margin-bottom: 24px; }
+        .input-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-tertiary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
+        .partner-input { 
+            width: 100%; background: var(--bg); border: 1px solid var(--border); 
+            border-radius: 12px; padding: 16px; color: var(--text); font-size: 15px; 
+            transition: 0.2s;
+        }
+        .partner-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-bg); }
+        
+        .export-btn {
+            width: 100%; background: linear-gradient(135deg, var(--p-medium), var(--p-deep));
+            color: white; border: none; padding: 18px; border-radius: 14px;
+            font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s;
+            margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+        .export-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3); }
+
+        .free-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            font-size: 12px; font-weight: 700; color: var(--green);
+            background: var(--green-bg); padding: 4px 12px; border-radius: 100px;
+            margin-bottom: 16px;
+        }
+
+        /* Footer */
+        footer { max-width: 1100px; margin: 60px auto 0; padding: 40px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+        footer .f-left { font-size: 14px; color: var(--text-tertiary); }
+        footer a { color: var(--text-secondary); text-decoration: none; font-size: 14px; }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .hero-container { flex-direction: column; text-align: center; }
+            .hero-text { text-align: center; display: flex; flex-direction: column; align-items: center; }
+            .hero-visual { transform: none; width: 100%; max-width: 600px; margin-top: 40px; }
+            .preview-frame { transform: none; }
+            .problem-grid, .value-grid { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+<nav>
+    <div class="nav-inner">
+        <div class="logo" onclick="showLanding()">presigna<span>.</span></div>
+        <div id="nav-action">
+            <a href="#beta-form-anchor" class="nav-cta">Request Your Briefs</a>
+        </div>
+    </div>
+</nav>
+
+<!-- Landing View -->
+<main id="landing-view">
+    <section class="hero">
+        <div class="hero-container">
+            <div class="hero-text">
+                <div class="hero-badge">BIO KOREA 2026 (Apr 28–30)</div>
+                <h1>Know your partner<br>before the meeting starts</h1>
+                <p>Tailored partnering briefs for early-stage biotech teams — we analyze partner decision drivers, map deal patterns, and turn them into actionable talking points.</p>
+                <a href="#beta-form-anchor" class="hero-cta">Request Your Partner Briefs</a>
+            </div>
+            
+            <div class="hero-visual">
+                <div class="preview-frame">
+                    <div class="preview-topbar">
+                        <div class="preview-dot"></div>
+                        <div class="preview-dot"></div>
+                        <div class="preview-dot"></div>
+                        <div class="preview-title">presigna_intelligence_brief.html</div>
+                    </div>
+                    <div class="preview-content">
+                        <div class="preview-overlay">
+                            <div class="preview-overlay-text">Sample Intelligence Brief</div>
+                            <div class="preview-overlay-sub">Comprehensive analysis for key partners</div>
+                            <a href="#beta-form-anchor" class="preview-overlay-cta">Request Sample Brief</a>
+                        </div>
+                        <div class="preview-blur">
+                            <div style="border-bottom: 2px solid #fff; padding-bottom: 12px; margin-bottom: 20px;">
+                                <h3>████████ Inc.</h3>
+                                <p style="color: var(--text-tertiary); font-size: 12px;">Targeted protein degradation — proprietary platform</p>
+                            </div>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <div style="background: #18181b; padding: 15px; border-radius: 8px;">
+                                    <h4 style="margin-bottom: 6px; color: var(--accent-light); font-size: 13px;">Decision Drivers</h4>
+                                    <p style="font-size: 11px;">Recent focus on multi-target discovery. Expanded 20██. Milestones exceed ¥██B.</p>
+                                </div>
+                                <div style="background: #18181b; padding: 15px; border-radius: 8px;">
+                                    <h4 style="margin-bottom: 6px; color: var(--green); font-size: 13px;">Talking Points</h4>
+                                    <p style="font-size: 11px;">Highlight proprietary E3 ligase binders and ██████ moieties.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-label">WHEN IT MATTERS MOST</div>
+        <h2>20 meetings in 3 days —<br>no time to prepare thoroughly</h2>
+        <div class="problem-grid">
+            <div class="problem-card">
+                <div class="num">01</div>
+                <h3>Stretched thin</h3>
+                <p>Without a dedicated BD team, CEOs and CSOs spend hours researching each counterpart on top of their core responsibilities.</p>
+            </div>
+            <div class="problem-card">
+                <div class="num">02</div>
+                <h3>Surface-level prep</h3>
+                <p>A quick website scan isn’t enough. Understanding a partner’s deal patterns, portfolio gaps, and preferences requires deep, structured research.</p>
+            </div>
+            <div class="problem-card">
+                <div class="num">03</div>
+                <h3>Missed follow-ups</h3>
+                <p>After meetings, connecting key discussion points to clinical evidence and structuring a proper follow-up often falls through the cracks.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="section-label">WHAT WE OFFER</div>
+        <h2>End-to-End Partnering Intelligence</h2>
+        <div class="value-grid">
+            <div class="value-card">
+                <div class="value-tag">Before the meeting</div>
+                <h3>Target Discovery & Prioritization</h3>
+                <ul>
+                    <li>Analyze deal activity and in-licensing</li>
+                    <li>Prioritize targets using fit scoring</li>
+                    <li>Map technical alignment</li>
+                </ul>
+            </div>
+            <div class="value-card">
+                <div class="value-tag">During the meeting</div>
+                <h3>Engagement Intelligence</h3>
+                <ul>
+                    <li>Map tailored asset narratives</li>
+                    <li>Prepare defensible talking points</li>
+                    <li>Identify stakeholder incentives</li>
+                </ul>
+            </div>
+            <div class="value-card">
+                <div class="value-tag">After the meeting</div>
+                <h3>Execution & Deal Tracking</h3>
+                <ul>
+                    <li>Link discussion to evidence</li>
+                    <li>Structure clinical follow-ups</li>
+                    <li>Track partner risks & progression</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Form CTA Section - ENHANCED GREEN THEME & PULSE ANIMATION -->
+    <section class="section" id="beta-form-anchor">
+        <div class="beta-box">
+            <div class="beta-spots">BIO KOREA 2026 Special Offering</div>
+            <h2>Request Your Partner Briefs</h2>
+            <div class="beta-desc">Get professional intelligence briefs for your upcoming partnering meetings. Tailored specifically for your asset and therapeutic area.</div>
+            
+            <form class="cta-form" action="https://formspree.io/f/mvzvaodl" method="POST">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" name="name" class="form-input" placeholder="Name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Company</label>
+                        <input type="text" name="company" class="form-input" placeholder="Company name" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="email" name="email" class="form-input" placeholder="you@company.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Interest Area</label>
+                        <select name="interest_area" class="form-select" required>
+                            <option value="" disabled selected>Select</option>
+                            <option>Oncology</option>
+                            <option>Immunology</option>
+                            <option>Neuroscience</option>
+                            <option>Rare Disease</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                </div>
+                <button type="submit" class="form-submit-full">Request a Quote</button>
+            </form>
+
+            <div class="trust">
+                <div class="trust-item"><span class="trust-icon">✦</span> Built at Antler Residency</div>
+                <div class="trust-item"><span class="trust-icon">✦</span> Every claim source-cited</div>
+                <div class="trust-item"><span class="trust-icon">✦</span> Human-reviewed for accuracy</div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<!-- Beta Input View (Free Beta Logic) -->
+<main id="beta-view" class="hidden">
+    <div class="beta-container">
+        <div class="beta-header">
+            <div class="free-badge">✦ BETA SERVICE: CURRENTLY FREE</div>
+            <h1>Perfect your strategy.</h1>
+            <p>We are currently preparing our official platform. During the beta period, we provide high-fidelity intelligence briefs for free to help you win your next deal.</p>
+        </div>
+
+        <div class="beta-input-section">
+            <form id="beta-form-detailed">
+                <div class="input-group">
+                    <label>Partner Company 01</label>
+                    <input type="text" class="partner-input" placeholder="e.g. Novartis, AstraZeneca, etc." required>
+                </div>
+                <div class="input-group">
+                    <label>Partner Company 02</label>
+                    <input type="text" class="partner-input" placeholder="Optional">
+                </div>
+                <div class="input-group">
+                    <label>Partner Company 03</label>
+                    <input type="text" class="partner-input" placeholder="Optional">
+                </div>
+                
+                <button type="submit" class="export-btn">
+                    <span>Export Partner Briefs</span>
+                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+                </button>
+            </form>
+            <p style="font-size: 12px; color: var(--text-tertiary); margin-top: 24px; text-align: center;">
+                Our team will analyze the selected companies and send the briefs to your email within 24 hours.
+            </p>
+        </div>
+    </div>
+</main>
+
+<footer>
+    <div class="f-left">&copy; 2026 Presigna</div>
+    <div>
+        <a href="mailto:hsshin62@gmail.com">Contact Us</a>
+    </div>
+</footer>
+
+<script>
+    function showBeta() {
+        document.getElementById('landing-view').classList.add('hidden');
+        document.getElementById('beta-view').classList.remove('hidden');
+        window.scrollTo(0, 0);
+    }
+
+    function showLanding() {
+        document.getElementById('beta-view').classList.add('hidden');
+        document.getElementById('landing-view').classList.remove('hidden');
+        window.scrollTo(0, 0);
+    }
+
+    // Handle form submission visuals
+    const form = document.querySelector('.cta-form');
+    if (form) {
+        form.addEventListener('submit', function(e) {
+            const btn = form.querySelector('.form-submit-full');
+            btn.innerHTML = 'Sending...';
+        });
+    }
+
+    // Detailed form logic for beta-view
+    document.getElementById('beta-form-detailed').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const btn = document.querySelector('.export-btn');
+        btn.innerHTML = 'Request Sent Successfully';
+        btn.style.background = 'var(--green)';
+        setTimeout(() => {
+            showLanding();
+            btn.innerHTML = '<span>Export Partner Briefs</span><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
+            btn.style.background = 'linear-gradient(135deg, var(--p-medium), var(--p-deep))';
+        }, 2000);
+    });
+</script>
+
+</body>
+</html>
