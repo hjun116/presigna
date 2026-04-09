@@ -43,8 +43,6 @@
             -webkit-font-smoothing: antialiased;
         }
 
-        /* Transition Logic */
-        #landing-view, #beta-view { transition: opacity 0.4s ease; }
         .hidden { display: none !important; }
 
         /* Nav */
@@ -171,7 +169,7 @@
         .value-card li { font-size: 13px; color: var(--text-secondary); padding: 8px 0 8px 20px; position: relative; border-top: 1px solid rgba(255,255,255,0.03); }
         .value-card li::before { content: '•'; position: absolute; left: 0; color: var(--accent-light); font-weight: 900; }
 
-        /* Final CTA Section (Box UI) - UPDATED TO GREEN & GLOW */
+        /* Final CTA Section */
         .beta-box { 
             background: var(--bg-card); 
             border: 2px solid var(--border); 
@@ -209,7 +207,7 @@
             margin-bottom: 40px; max-width: 500px; margin-left: auto; margin-right: auto; 
         }
 
-        /* Form Styling in CTA - Green Themed Button */
+        /* Form Styling */
         .cta-form { max-width: 600px; margin: 0 auto; display: grid; gap: 16px; text-align: left; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
         .form-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; }
@@ -227,6 +225,7 @@
             box-shadow: 0 10px 30px rgba(34, 197, 94, 0.2);
         }
         .form-submit-full:hover { background: var(--green-light); transform: translateY(-1px); box-shadow: 0 12px 40px rgba(34, 197, 94, 0.4); }
+        .form-submit-full:disabled { opacity: 0.6; cursor: not-allowed; transform: none; }
 
         .trust { 
             display: flex; justify-content: center; gap: 40px; 
@@ -235,52 +234,6 @@
         }
         .trust-item { font-size: 13px; color: var(--text-tertiary); display: flex; align-items: center; gap: 8px; }
         .trust-icon { color: var(--green); font-size: 16px; }
-
-        /* Beta View Specific */
-        #beta-view { padding-top: 140px; min-height: 100vh; }
-        .beta-container { max-width: 800px; margin: 0 auto; text-align: center; }
-        .beta-header { margin-bottom: 60px; }
-        .beta-header h1 { font-size: 36px; font-weight: 800; margin-bottom: 16px; letter-spacing: -0.03em; }
-        .beta-header p { color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0 auto; }
-        
-        .beta-input-section { 
-            background: var(--bg-card); 
-            border: 1px solid var(--border); 
-            border-radius: 24px; 
-            padding: 48px; 
-            text-align: left;
-            position: relative;
-        }
-        .beta-input-section::before {
-            content: 'LIMITED BETA';
-            position: absolute; top: -12px; left: 40px;
-            background: var(--accent); color: white; font-size: 10px; font-weight: 800;
-            padding: 4px 12px; border-radius: 4px;
-        }
-
-        .input-group { margin-bottom: 24px; }
-        .input-group label { display: block; font-size: 12px; font-weight: 600; color: var(--text-tertiary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.05em; }
-        .partner-input { 
-            width: 100%; background: var(--bg); border: 1px solid var(--border); 
-            border-radius: 12px; padding: 16px; color: var(--text); font-size: 15px; 
-            transition: 0.2s;
-        }
-        .partner-input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 4px var(--accent-bg); }
-        
-        .export-btn {
-            width: 100%; background: linear-gradient(135deg, var(--p-medium), var(--p-deep));
-            color: white; border: none; padding: 18px; border-radius: 14px;
-            font-size: 16px; font-weight: 700; cursor: pointer; transition: 0.2s;
-            margin-top: 10px; display: flex; align-items: center; justify-content: center; gap: 10px;
-        }
-        .export-btn:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3); }
-
-        .free-badge {
-            display: inline-flex; align-items: center; gap: 6px;
-            font-size: 12px; font-weight: 700; color: var(--green);
-            background: var(--green-bg); padding: 4px 12px; border-radius: 100px;
-            margin-bottom: 16px;
-        }
 
         /* Footer */
         footer { max-width: 1100px; margin: 60px auto 0; padding: 40px 24px; border-top: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
@@ -302,7 +255,7 @@
 
 <nav>
     <div class="nav-inner">
-        <div class="logo" onclick="showLanding()">presigna<span>.</span></div>
+        <div class="logo"><a href="index.html" style="text-decoration:none; color:inherit;">presigna<span>.</span></a></div>
         <div id="nav-action">
             <a href="#beta-form-anchor" class="nav-cta">Request Your Briefs</a>
         </div>
@@ -367,7 +320,7 @@
             <div class="problem-card">
                 <div class="num">02</div>
                 <h3>Surface-level prep</h3>
-                <p>A quick website scan isn’t enough. Understanding a partner’s deal patterns, portfolio gaps, and preferences requires deep, structured research.</p>
+                <p>A quick website scan isn't enough. Understanding a partner's deal patterns, portfolio gaps, and preferences requires deep, structured research.</p>
             </div>
             <div class="problem-card">
                 <div class="num">03</div>
@@ -417,7 +370,9 @@
             <h2>Request Your Partner Briefs</h2>
             <div class="beta-desc">Get professional intelligence briefs for your upcoming partnering meetings. Tailored specifically for your asset and therapeutic area.</div>
             
-            <form class="cta-form" action="https://formspree.io/f/mkopajwa" method="POST">
+            <!-- FIX: action/method 속성 제거 — JS가 sessionStorage에만 저장하고 step2로 이동하므로
+                 여기서 Formspree로 직접 전송되면 안 됩니다. -->
+            <form class="cta-form" id="page1-form">
                 <div class="form-row">
                     <div class="form-group">
                         <label>Name</label>
@@ -445,7 +400,7 @@
                         </select>
                     </div>
                 </div>
-                <button type="submit" class="form-submit-full">Request a Quote</button>
+                <button type="submit" class="form-submit-full">Request a Quote →</button>
             </form>
 
             <div class="trust">
@@ -457,97 +412,50 @@
     </section>
 </main>
 
-<main id="beta-view" class="hidden">
-    <div class="beta-container">
-        <div class="beta-header">
-            <div class="free-badge">✦ BETA SERVICE: CURRENTLY FREE</div>
-            <h1>Perfect your strategy.</h1>
-            <p>We are currently preparing our official platform. During the beta period, we provide high-fidelity intelligence briefs for free to help you win your next deal.</p>
-        </div>
-
-        <div class="beta-input-section">
-            <form id="beta-form-detailed">
-                <div class="input-group">
-                    <label>Partner Company 01</label>
-                    <input type="text" class="partner-input" placeholder="e.g. Novartis, AstraZeneca, etc." required>
-                </div>
-                <div class="input-group">
-                    <label>Partner Company 02</label>
-                    <input type="text" class="partner-input" placeholder="Optional">
-                </div>
-                <div class="input-group">
-                    <label>Partner Company 03</label>
-                    <input type="text" class="partner-input" placeholder="Optional">
-                </div>
-                
-                <button type="submit" class="export-btn">
-                    <span>Export Partner Briefs</span>
-                    <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-                </button>
-            </form>
-            <p style="font-size: 12px; color: var(--text-tertiary); margin-top: 24px; text-align: center;">
-                Our team will analyze the selected companies and send the briefs to your email within 24 hours.
-            </p>
-        </div>
-    </div>
-</main>
+<!-- FIX: 데드코드였던 #beta-view 전체 삭제.
+     역할이 step2.html과 완전히 중복되며, Formspree 전송 로직도 없었음. -->
 
 <footer>
-    <div class="f-left">&copy; 2026 Presigna</div>
+    <div class="f-left">&copy; 2026 Presigna. All rights reserved.</div>
     <div>
-        <a href="mailto:hsshin62@gmail.com">Contact Us</a>
+        <!-- FIX: Cloudflare 이메일 난독화 링크 → 일반 mailto 링크로 교체.
+             GitHub Pages에는 Cloudflare 디코딩 스크립트가 없으므로 깨짐. -->
+        <a href="mailto:contact@presigna.com">Contact Us</a>
     </div>
 </footer>
 
 <script>
-    function showBeta() {
-        document.getElementById('landing-view').classList.add('hidden');
-        document.getElementById('beta-view').classList.remove('hidden');
-        window.scrollTo(0, 0);
-    }
+    const page1Form = document.getElementById('page1-form');
 
-    function showLanding() {
-        document.getElementById('beta-view').classList.add('hidden');
-        document.getElementById('landing-view').classList.remove('hidden');
-        window.scrollTo(0, 0);
-    }
-
-    // 1페이지의 폼 동작을 제어합니다.
-    const form = document.querySelector('.cta-form');
-    if (form) {
-        form.addEventListener('submit', function(e) {
-            e.preventDefault(); // 기본 전송 방식을 막습니다.
-            
-            const btn = form.querySelector('.form-submit-full');
-            btn.innerHTML = 'Loading...';
-
-            // 1. 사용자가 1페이지에 입력한 정보를 모읍니다.
-            const formData = new FormData(form);
-
-            // 2. 폼스프리로 바로 보내지 않고, 브라우저의 '임시 보관함(sessionStorage)'에 담아둡니다.
-            for (let [key, value] of formData.entries()) {
-                // 이름이 헷갈리지 않게 앞에 'page1_' 이라는 꼬리표를 붙여서 저장합니다.
-                sessionStorage.setItem('page1_' + key, value); 
-            }
-
-            // 3. 정보만 장바구니에 담고 조용히 2페이지로 이동합니다.
-            window.location.href = 'step2.html'; 
-        });
-    }
-
-    // Detailed form logic for beta-view
-    document.getElementById('beta-form-detailed').addEventListener('submit', function(e) {
+    page1Form.addEventListener('submit', function(e) {
         e.preventDefault();
-        const btn = document.querySelector('.export-btn');
-        btn.innerHTML = 'Request Sent Successfully';
-        btn.style.background = 'var(--green)';
+
+        const btn = page1Form.querySelector('.form-submit-full');
+        const originalText = btn.innerHTML;
+        btn.innerHTML = 'Loading...';
+        btn.disabled = true;
+
+        // 1페이지 입력값을 sessionStorage에 저장
+        const formData = new FormData(page1Form);
+
+        // FIX: 명시적 key 목록으로 저장 — FormData 순서에 의존하지 않음
+        const page1Keys = ['name', 'company', 'email', 'interest_area'];
+        page1Keys.forEach(key => {
+            const value = formData.get(key);
+            if (value !== null) {
+                sessionStorage.setItem('page1_' + key, value);
+            }
+        });
+
+        // 2페이지로 이동
+        window.location.href = 'step2.html';
+
+        // 이동 실패 대비: 버튼 복원
         setTimeout(() => {
-            showLanding();
-            btn.innerHTML = '<span>Export Partner Briefs</span><svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 12h14M12 5l7 7-7 7"/></svg>';
-            btn.style.background = 'linear-gradient(135deg, var(--p-medium), var(--p-deep))';
-        }, 2000);
+            btn.innerHTML = originalText;
+            btn.disabled = false;
+        }, 3000);
     });
 </script>
-
 </body>
 </html>
