@@ -515,12 +515,38 @@
         window.scrollTo(0, 0);
     }
 
-    // Handle form submission visuals
+    // 폼을 전송할 때 일어날 일을 새로 정의합니다.
     const form = document.querySelector('.cta-form');
     if (form) {
         form.addEventListener('submit', function(e) {
+            // 1. 폼스프리의 기본 완료 화면으로 강제로 넘어가는 것을 막습니다. (가장 중요)
+            e.preventDefault(); 
+            
             const btn = form.querySelector('.form-submit-full');
-            btn.innerHTML = 'Sending...';
+            btn.innerHTML = 'Sending...'; // 진행 중임을 표시합니다.
+
+            // 2. 사용자가 입력한 정보(이름, 이메일 등)를 하나로 묶어줍니다.
+            const formData = new FormData(form);
+
+            // 3. 화면을 이동시키지 않고, 백그라운드에서 폼스프리로 정보를 조용히 전송합니다.
+            fetch(form.action, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'Accept': 'application/json'
+                }
+            }).then(response => {
+                if (response.ok) {
+                    // 4. 폼스프리가 정보를 잘 받았다고 신호를 보내면, 비로소 두 번째 페이지로 이동시킵니다.
+                    window.location.href = 'step2.html'; 
+                } else {
+                    alert("앗, 전송에 실패했습니다. 다시 시도해주세요.");
+                    btn.innerHTML = 'Request a Quote';
+                }
+            }).catch(error => {
+                alert("네트워크 문제가 발생했습니다.");
+                btn.innerHTML = 'Request a Quote';
+            });
         });
     }
 
