@@ -11,12 +11,7 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #09090b; /* Zinc 950 */
-        }
-        .form-input:focus {
-            ring: 2px;
-            ring-color: #818cf8; /* Indigo 400 */
-            outline: none;
+            background-color: #09090b;
         }
         @keyframes pulse-brighter {
             0%, 100% { opacity: 1; transform: scale(1); }
@@ -26,13 +21,14 @@
             animation: pulse-brighter 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
         }
         .beta-badge {
-            background-color: #1e1b4b; /* Indigo 950 */
-            border: 1px solid #4338ca; /* Indigo 700 */
+            background-color: #1e1b4b;
+            border: 1px solid #4338ca;
         }
     </style>
 </head>
 <body class="min-h-screen flex flex-col items-center justify-center p-4">
 
+    <!-- Success Modal -->
     <div id="success-box" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-80 p-4">
         <div class="bg-zinc-900 rounded-2xl p-8 max-w-md w-full text-center shadow-2xl border border-zinc-800">
             <div class="w-16 h-16 bg-indigo-900/50 text-indigo-400 rounded-full flex items-center justify-center mx-auto mb-4 border border-indigo-700">
@@ -62,11 +58,11 @@
                 Customize Your Strategic Brief
             </h1>
             <p class="text-zinc-400 text-lg leading-relaxed max-w-lg mx-auto">
-                Tell us your target partners — we’ll deliver a <span class="text-indigo-400 font-semibold">tailored meeting strategy</span> for your success.
+                Tell us your target partners — we'll deliver a <span class="text-indigo-400 font-semibold">tailored meeting strategy</span> for your success.
             </p>
         </div>
 
-        <form id="request-form" class="p-8 pt-4 space-y-8 flex flex-col items-center" action="https://formspree.io/f/mkopajwa" method="POST">
+        <form id="request-form" class="p-8 pt-4 space-y-8 flex flex-col items-center">
             
             <div class="w-full max-w-md">
                 <label class="block text-xs font-bold text-zinc-500 mb-4 uppercase tracking-widest text-center">
@@ -124,8 +120,8 @@
             </div>
 
             <div class="w-full max-w-md">
-                <button type="submit" 
-                    class="w-full bg-indigo-600 text-white text-sm font-bold py-4 rounded-xl hover:bg-indigo-500 transform active:scale-[0.99] transition-all shadow-lg hover:shadow-indigo-900/30 flex items-center justify-center space-x-2">
+                <button type="submit" id="submit-btn"
+                    class="w-full bg-indigo-600 text-white text-sm font-bold py-4 rounded-xl hover:bg-indigo-500 transform active:scale-[0.99] transition-all shadow-lg hover:shadow-indigo-900/30 flex items-center justify-center space-x-2 disabled:opacity-60 disabled:cursor-not-allowed">
                     <span>Get Early Access & Free Briefs</span>
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
                         <path fill-rule="evenodd" d="M10.293 3.293a1 1 0 011.414 0l6 6a1 1 0 010 1.414l-6 6a1 1 0 01-1.414-1.414L14.586 11H3a1 1 0 110-2h11.586l-4.293-4.293a1 1 0 010-1.414z" clip-rule="evenodd" />
@@ -143,61 +139,72 @@
     </footer>
 
     <script>
+        const FORMSPREE_URL = 'https://formspree.io/f/mkopajwa';
+
+        // FIX: 명시적 key 배열로 sessionStorage에서 읽음
+        // sessionStorage.key(i)는 브라우저마다 순서가 달라 불안정함
+        const PAGE1_KEYS = ['name', 'company', 'email', 'interest_area'];
+
         const form = document.getElementById('request-form');
         const successBox = document.getElementById('success-box');
+        const submitBtn = document.getElementById('submit-btn');
+
+        // sessionStorage에 page1 데이터가 없으면 1페이지로 되돌림
+        // (직접 URL 접근 방지)
+        const hasPage1Data = PAGE1_KEYS.some(k => sessionStorage.getItem('page1_' + k));
+        if (!hasPage1Data) {
+            window.location.href = 'index.html';
+        }
 
         form.addEventListener('submit', (e) => {
-            e.preventDefault(); 
-            
-            const btn = form.querySelector('button[type="submit"]');
-            const originalContent = btn.innerHTML; 
-            
-            // 버튼 상태를 전송 중으로 변경
-            btn.innerHTML = 'Processing & Securely Sending...';
-            btn.disabled = true; 
+            e.preventDefault();
 
-            // 1. 2페이지에서 입력한 파트너 정보들을 모읍니다.
+            const originalHTML = submitBtn.innerHTML;
+            submitBtn.innerHTML = 'Processing & Securely Sending...';
+            submitBtn.disabled = true;
+
+            // 2페이지 파트너 입력값 수집
             const formData = new FormData(form);
 
-            // 2. 1페이지에서 '임시 보관함'에 담아둔 정보(이름, 이메일 등)를 꺼내서 합칩니다.
-            for (let i = 0; i < sessionStorage.length; i++) {
-                const key = sessionStorage.key(i);
-                if (key && key.startsWith('page1_')) {
-                    const originalKey = key.replace('page1_', ''); 
-                    const value = sessionStorage.getItem(key);
-                    formData.append(originalKey, value); 
+            // FIX: 명시적 key 배열로 1페이지 데이터를 꺼내어 병합
+            PAGE1_KEYS.forEach(key => {
+                const value = sessionStorage.getItem('page1_' + key);
+                if (value) {
+                    formData.append(key, value);
                 }
-            }
+            });
 
-            // 3. 하나로 합쳐진 데이터를 폼스프리로 전송합니다.
-            fetch(form.action, {
+            // Formspree로 전체 데이터 전송
+            fetch(FORMSPREE_URL, {
                 method: 'POST',
                 body: formData,
-                headers: {
-                    'Accept': 'application/json'
-                }
-            }).then(response => {
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(response => {
                 if (response.ok) {
-                    // 성공 시 보관함을 비우고 완료 화면 띄우기
                     sessionStorage.clear();
                     successBox.classList.remove('hidden');
                     form.reset();
-                    btn.innerHTML = originalContent;
-                    btn.disabled = false;
+                    submitBtn.innerHTML = originalHTML;
+                    submitBtn.disabled = false;
                 } else {
-                    alert("전송에 실패했습니다. 다시 시도해 주세요.");
-                    btn.innerHTML = originalContent;
-                    btn.disabled = false;
+                    // FIX: 에러 메시지 영어로 통일
+                    alert('Submission failed. Please try again.');
+                    submitBtn.innerHTML = originalHTML;
+                    submitBtn.disabled = false;
                 }
-            }).catch(error => {
-                alert("네트워크 연결에 문제가 발생했습니다.");
-                btn.innerHTML = originalContent;
-                btn.disabled = false;
+            })
+            .catch(() => {
+                // FIX: 에러 메시지 영어로 통일
+                alert('A network error occurred. Please check your connection and try again.');
+                submitBtn.innerHTML = originalHTML;
+                submitBtn.disabled = false;
             });
         });
 
         function closeSuccess() {
             successBox.classList.add('hidden');
+            window.location.href = 'index.html';
         }
     </script>
 </body>
